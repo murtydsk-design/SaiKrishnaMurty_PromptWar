@@ -44,7 +44,7 @@ export async function POST(request: Request) {
   if (!keyPresent) {
     console.error("[ThinkLens] CLARIFY_FAILED: GEMINI_API_KEY missing");
     return NextResponse.json(
-      { error: "Gemini API key is not configured. Please add GEMINI_API_KEY to environment variables.", detail: "GEMINI_KEY_PRESENT=false" },
+      { error: "Gemini API key is not configured. Please add GEMINI_API_KEY to environment variables." },
       { status: 500 }
     );
   }
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     } catch {
       console.warn("[ThinkLens] REQUEST_VALIDATION_FAILED: Invalid JSON body");
       return NextResponse.json(
-        { error: "Please provide a decision, details, and your reasoning.", detail: "Invalid JSON body" },
+        { error: "Please provide a decision, details, and your reasoning." },
         { status: 400 }
       );
     }
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     if (!body || typeof body !== "object") {
       console.warn("[ThinkLens] REQUEST_VALIDATION_FAILED: Body not an object");
       return NextResponse.json(
-        { error: "Please provide a decision, details, and your reasoning.", detail: "Body not an object" },
+        { error: "Please provide a decision, details, and your reasoning." },
         { status: 400 }
       );
     }
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
     if (!decision || !details || !reasoning) {
       console.warn("[ThinkLens] REQUEST_VALIDATION_FAILED: Required fields missing");
       return NextResponse.json(
-        { error: "Please provide a decision, details, and your reasoning.", detail: "Required fields missing" },
+        { error: "Please provide a decision, details, and your reasoning." },
         { status: 400 }
       );
     }
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
     ) {
       console.warn("[ThinkLens] REQUEST_VALIDATION_FAILED: Text length limits exceeded");
       return NextResponse.json(
-        { error: "Input text exceeds maximum allowed length limits.", detail: "Text length limits exceeded" },
+        { error: "Input text exceeds maximum allowed length limits." },
         { status: 400 }
       );
     }
@@ -123,7 +123,7 @@ export async function POST(request: Request) {
     if (!result) {
       console.error("[ThinkLens] CLARIFY_FAILED: Failed to produce valid questions after retry.");
       return NextResponse.json(
-        { error: "We couldn't analyze your input right now. Please try again.", detail: "Failed to produce valid questions after retry" },
+        { error: "We couldn't analyze your input right now. Please try again." },
         { status: 500 }
       );
     }
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
     const errMsg = error instanceof Error ? error.message : String(error);
     console.error(`[ThinkLens] CLARIFY_FAILED error=${errMsg}`);
     return NextResponse.json(
-      { error: "We couldn't analyze your input right now. Please try again.", detail: errMsg },
+      { error: "We couldn't analyze your input right now. Please try again." },
       { status: 500 }
     );
   }
