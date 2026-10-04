@@ -1,15 +1,16 @@
 /**
- * Server-side utility to send prompts to Gemini API using direct REST fetch / SDK.
+ * Server-side utility to send prompts to Gemini API using direct REST fetch.
  * Uses process.env.GEMINI_API_KEY. Never expose this on the client side.
  */
 export async function generateWithGemini(prompt: string): Promise<{ text: string; model: string; status: number }> {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const rawApiKey = process.env.GEMINI_API_KEY;
 
-  if (!apiKey || apiKey === "your_gemini_api_key_here") {
+  if (!rawApiKey || rawApiKey === "your_gemini_api_key_here") {
     console.error("[ThinkLens] GEMINI_KEY_PRESENT=false");
-    throw new Error("Gemini API key is not configured.");
+    throw new Error("Gemini API key is not configured in process.env.GEMINI_API_KEY.");
   }
 
+  const apiKey = rawApiKey.trim().replace(/^["']|["']$/g, "");
   console.log("[ThinkLens] GEMINI_KEY_PRESENT=true");
 
   const rawModels = [
@@ -28,7 +29,7 @@ export async function generateWithGemini(prompt: string): Promise<{ text: string
     (m): m is string => typeof m === "string" && m.trim().length > 0
   );
 
-  let lastError: unknown = null;
+  let lastErrorText = "";
   let lastStatus = 500;
 
   for (const modelName of candidateModels) {
@@ -36,7 +37,7 @@ export async function generateWithGemini(prompt: string): Promise<{ text: string
       console.log(`[ThinkLens] MODEL=${modelName}`);
       console.log(`[ThinkLens] GEMINI_REQUEST_STARTED model=${modelName}`);
 
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
@@ -59,8 +60,8 @@ export async function generateWithGemini(prompt: string): Promise<{ text: string
       console.log(`[ThinkLens] GEMINI_STATUS=${response.status}`);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.warn(`[ThinkLens] GEMINI_MODEL_FAILED model=${modelName} status=${response.status} err=${errorText.substring(0, 150)}`);
+        lastErrorText = await response.text();
+        console.warn(`[ThinkLens] GEMINI_ERROR status=${response.status} model=${modelName} msg=${lastErrorText.substring(0, 200)}`);
         continue;
       }
 
@@ -74,13 +75,12 @@ export async function generateWithGemini(prompt: string): Promise<{ text: string
         console.warn(`[ThinkLens] GEMINI_EMPTY_RESPONSE model=${modelName}`);
       }
     } catch (err: unknown) {
-      lastError = err;
-      const errMsg = err instanceof Error ? err.message : String(err);
-      console.warn(`[ThinkLens] GEMINI_FETCH_ERROR model=${modelName} err=${errMsg.substring(0, 120)}`);
+      lastErrorText = err instanceof Error ? err.message : String(err);
+      console.warn(`[ThinkLens] GEMINI_FETCH_ERROR model=${modelName} err=${lastErrorText.substring(0, 150)}`);
       continue;
     }
   }
 
-  console.error("[ThinkLens] ALL_MODELS_FAILED lastStatus=", lastStatus);
-  throw new Error(`Failed to communicate with AI service (Status: ${lastStatus}).`);
+  console.error(`[ThinkLens] ALL_MODELS_FAILED lastStatus=${lastStatus} lastErr=${lastErrorText.substring(0, 200)}`);
+  throw new Error(`Failed to communicate with AI service (Status ${lastStatus}: ${lastErrorText.substring(0, 100)}).`);
 }
