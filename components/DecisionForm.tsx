@@ -34,7 +34,6 @@ export default function DecisionForm({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear field-specific validation error on change
     if (validationErrors[name as keyof typeof validationErrors]) {
       setValidationErrors((prev) => ({ ...prev, [name]: undefined }));
     }
@@ -105,21 +104,21 @@ export default function DecisionForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-3xl mx-auto space-y-6 bg-slate-900/60 p-6 sm:p-8 rounded-2xl border border-slate-800 shadow-xl"
+      className="w-full max-w-3xl mx-auto space-y-6 bg-[#171715] p-6 sm:p-8 rounded-xl border border-white/10 shadow-xl"
     >
-      {/* Top Header bar with Load Example */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-slate-800">
+      {/* Header bar with Load Example */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-white/10">
         <div>
-          <h2 className="text-xl font-bold text-slate-100">Describe Your Decision</h2>
-          <p className="text-xs text-slate-400">
-            Provide details about the choice you are evaluating.
+          <h2 className="text-xl font-bold text-[#F5F1E8]">Describe Your Decision</h2>
+          <p className="text-xs text-[#A9A49A]">
+            Provide context about the choice you are evaluating.
           </p>
         </div>
         <button
           type="button"
           onClick={handleLoadExample}
           disabled={isLoading}
-          className="self-start sm:self-auto px-3.5 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-xs font-semibold border border-indigo-500/30 transition-colors disabled:opacity-50"
+          className="self-start sm:self-auto px-3.5 py-1.5 rounded-lg bg-[#1D1D1A] hover:bg-[#252522] text-[#F3EBDD] text-xs font-semibold border border-white/10 transition-colors disabled:opacity-50"
         >
           Load Example
         </button>
@@ -127,7 +126,7 @@ export default function DecisionForm({
 
       {/* Global API Error Alert */}
       {apiError && (
-        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="p-4 rounded-xl bg-red-950/20 border border-red-800/40 text-red-200 text-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <svg className="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -144,13 +143,13 @@ export default function DecisionForm({
         </div>
       )}
 
-      {/* Field 1: Decision */}
+      {/* Field 1: Decision (Dominant) */}
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="decision" className="block text-sm font-semibold text-slate-200">
-            What&apos;s the decision you&apos;re thinking about? <span className="text-indigo-400">*</span>
+          <label htmlFor="decision" className="block text-base font-bold text-[#F5F1E8]">
+            What&apos;s the decision you&apos;re thinking about? <span className="text-[#D6A84F]">*</span>
           </label>
-          <span className="text-[11px] text-slate-500">{formData.decision.length}/500</span>
+          <span className="text-[11px] font-mono text-[#78736A]">{formData.decision.length}/500</span>
         </div>
         <input
           id="decision"
@@ -160,11 +159,11 @@ export default function DecisionForm({
           value={formData.decision}
           onChange={handleChange}
           disabled={isLoading}
-          placeholder="e.g. Should I accept this internship?"
-          className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
+          placeholder="e.g. Should I accept this 6-month internship?"
+          className={`w-full px-4 py-3 rounded-xl bg-[#0D0D0C] border text-[#F5F1E8] text-sm placeholder:text-[#78736A] focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F]/30 transition-colors ${
             validationErrors.decision
-              ? "border-red-500/80 focus:ring-red-500"
-              : "border-slate-800 focus:border-indigo-500"
+              ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/20"
+              : "border-white/10"
           } disabled:opacity-60`}
         />
         {validationErrors.decision && (
@@ -175,10 +174,10 @@ export default function DecisionForm({
       {/* Field 2: Options (Optional) */}
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="options" className="block text-sm font-semibold text-slate-200">
-            What are your options? <span className="text-xs font-normal text-slate-500">(Optional)</span>
+          <label htmlFor="options" className="block text-sm font-semibold text-[#F5F1E8]">
+            What are your options? <span className="text-xs font-normal text-[#78736A]">(Optional)</span>
           </label>
-          <span className="text-[11px] text-slate-500">{formData.options.length}/1000</span>
+          <span className="text-[11px] font-mono text-[#78736A]">{formData.options.length}/1000</span>
         </div>
         <input
           id="options"
@@ -189,10 +188,10 @@ export default function DecisionForm({
           onChange={handleChange}
           disabled={isLoading}
           placeholder="e.g. Accept, decline, negotiate"
-          className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
+          className={`w-full px-4 py-2.5 rounded-xl bg-[#0D0D0C] border text-[#F5F1E8] text-sm placeholder:text-[#78736A] focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F]/30 transition-colors ${
             validationErrors.options
-              ? "border-red-500/80 focus:ring-red-500"
-              : "border-slate-800 focus:border-indigo-500"
+              ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/20"
+              : "border-white/10"
           } disabled:opacity-60`}
         />
         {validationErrors.options && (
@@ -203,10 +202,10 @@ export default function DecisionForm({
       {/* Field 3: Relevant Details */}
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="details" className="block text-sm font-semibold text-slate-200">
-            What details matter? <span className="text-indigo-400">*</span>
+          <label htmlFor="details" className="block text-sm font-semibold text-[#F5F1E8]">
+            What details matter? <span className="text-[#D6A84F]">*</span>
           </label>
-          <span className="text-[11px] text-slate-500">{formData.details.length}/5000</span>
+          <span className="text-[11px] font-mono text-[#78736A]">{formData.details.length}/5000</span>
         </div>
         <textarea
           id="details"
@@ -217,10 +216,10 @@ export default function DecisionForm({
           onChange={handleChange}
           disabled={isLoading}
           placeholder="Include constraints, circumstances, deadlines, people involved, risks, or anything else that matters."
-          className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-y min-h-[100px] ${
+          className={`w-full px-4 py-2.5 rounded-xl bg-[#0D0D0C] border text-[#F5F1E8] text-sm placeholder:text-[#78736A] focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F]/30 transition-colors resize-y min-h-[100px] ${
             validationErrors.details
-              ? "border-red-500/80 focus:ring-red-500"
-              : "border-slate-800 focus:border-indigo-500"
+              ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/20"
+              : "border-white/10"
           } disabled:opacity-60`}
         />
         {validationErrors.details && (
@@ -231,10 +230,10 @@ export default function DecisionForm({
       {/* Field 4: Why Leaning This Way */}
       <div className="space-y-1.5">
         <div className="flex justify-between items-center">
-          <label htmlFor="reasoning" className="block text-sm font-semibold text-slate-200">
-            Why are you leaning this way? <span className="text-indigo-400">*</span>
+          <label htmlFor="reasoning" className="block text-sm font-semibold text-[#F5F1E8]">
+            Why are you leaning this way? <span className="text-[#D6A84F]">*</span>
           </label>
-          <span className="text-[11px] text-slate-500">{formData.reasoning.length}/5000</span>
+          <span className="text-[11px] font-mono text-[#78736A]">{formData.reasoning.length}/5000</span>
         </div>
         <textarea
           id="reasoning"
@@ -245,10 +244,10 @@ export default function DecisionForm({
           onChange={handleChange}
           disabled={isLoading}
           placeholder="Tell ThinkLens what is currently driving your thinking."
-          className={`w-full px-4 py-2.5 rounded-xl bg-slate-950 border text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors resize-y min-h-[80px] ${
+          className={`w-full px-4 py-2.5 rounded-xl bg-[#0D0D0C] border text-[#F5F1E8] text-sm placeholder:text-[#78736A] focus:outline-none focus:border-[#D6A84F] focus:ring-1 focus:ring-[#D6A84F]/30 transition-colors resize-y min-h-[80px] ${
             validationErrors.reasoning
-              ? "border-red-500/80 focus:ring-red-500"
-              : "border-slate-800 focus:border-indigo-500"
+              ? "border-red-500/80 focus:border-red-500 focus:ring-red-500/20"
+              : "border-white/10"
           } disabled:opacity-60`}
         />
         {validationErrors.reasoning && (
@@ -256,16 +255,16 @@ export default function DecisionForm({
         )}
       </div>
 
-      {/* Submit Button */}
+      {/* Primary Submit Button */}
       <div className="pt-2">
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full py-3.5 px-6 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white font-semibold text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full py-3.5 px-6 rounded-xl bg-[#D6A84F] hover:bg-[#E0B65A] active:bg-[#C9963E] text-[#0D0D0C] font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
         >
           {isLoading ? (
             <>
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#0D0D0C]" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -274,8 +273,8 @@ export default function DecisionForm({
           ) : (
             <>
               <span>Find My Blind Spots</span>
-              <svg className="w-4 h-4 text-indigo-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg className="w-4 h-4 text-[#0D0D0C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </>
           )}

@@ -124,7 +124,6 @@ export default function HomePage() {
         throw new Error(data?.error || "We couldn't complete the analysis right now. Please try again.");
       }
 
-      // Validate required response fields
       if (
         !data ||
         typeof data.reasoningSummary !== "string" ||
@@ -173,7 +172,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col justify-between items-center px-4 py-8 sm:px-6 lg:px-8 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100">
+    <main className="min-h-screen flex flex-col justify-between items-center px-4 py-8 sm:px-6 lg:px-8 bg-[#0D0D0C] text-[#F5F1E8]">
       <div className="w-full max-w-4xl mx-auto space-y-6">
         {/* Header Component */}
         <ThinkLensHeader />
@@ -183,7 +182,7 @@ export default function HomePage() {
 
         {/* Global API Error Alert on Step 2 / Step 3 */}
         {apiError && step !== 1 && (
-          <div className="w-full max-w-3xl mx-auto p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm flex items-center justify-between gap-3 shadow-md">
+          <div className="w-full max-w-3xl mx-auto p-4 rounded-xl bg-red-950/20 border border-red-800/40 text-red-200 text-sm flex items-center justify-between gap-3 shadow-md">
             <div className="flex items-center gap-2">
               <svg className="w-5 h-5 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -193,7 +192,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => setApiError(null)}
-              className="text-xs font-semibold text-red-400 underline hover:text-red-300 shrink-0"
+              className="text-xs font-semibold text-red-400 underline hover:text-red-300 shrink-0 cursor-pointer"
             >
               Dismiss
             </button>
@@ -202,17 +201,17 @@ export default function HomePage() {
 
         {/* Loading Overlay State for Analysis */}
         {isLoadingAnalyze && (
-          <div className="w-full max-w-3xl mx-auto p-8 sm:p-12 rounded-2xl bg-slate-900/80 border border-indigo-500/30 shadow-2xl text-center space-y-4 animate-pulse">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-500/20 text-indigo-400">
-              <svg className="w-7 h-7 animate-spin" fill="none" viewBox="0 0 24 24">
+          <div className="w-full max-w-3xl mx-auto p-8 sm:p-12 rounded-xl bg-[#171715] border border-white/10 shadow-2xl text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#1D1D1A] border border-[#D6A84F]/30 text-[#D6A84F]">
+              <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
             </div>
             <div className="space-y-1.5">
-              <h3 className="text-xl font-bold text-slate-100">Examining your reasoning...</h3>
-              <p className="text-xs sm:text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-                ThinkLens is examining your decision, details, and answers for hidden assumptions, overlooked factors, tensions, and cognitive patterns.
+              <h3 className="text-xl font-bold text-[#F5F1E8]">EXAMINING YOUR REASONING</h3>
+              <p className="text-xs sm:text-sm text-[#A9A49A] max-w-md mx-auto leading-relaxed">
+                ThinkLens is looking for assumptions, overlooked factors, tensions, and cognitive patterns in your reasoning.
               </p>
             </div>
           </div>
@@ -251,8 +250,8 @@ export default function HomePage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-center text-xs text-slate-500 pt-8 pb-4 border-t border-slate-900/50 w-full max-w-3xl mt-8">
-        ThinkLens &copy; {new Date().getFullYear()} — Critical-Thinking Assistant
+      <footer className="text-center text-xs text-[#78736A] pt-8 pb-4 border-t border-white/5 w-full max-w-3xl mt-8">
+        ThinkLens &copy; 2026 — Critical-Thinking Assistant
       </footer>
     </main>
   );
