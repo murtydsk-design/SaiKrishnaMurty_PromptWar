@@ -51,12 +51,10 @@ function parseAndValidateAnalysis(rawText: string): Analysis | null {
     // Validate internalConflicts
     if (!Array.isArray(parsed.internalConflicts)) return null;
     for (const item of parsed.internalConflicts) {
-      if (
-        !item ||
-        typeof item.conflict !== "string" ||
-        typeof item.statementOne !== "string" ||
-        typeof item.statementTwo !== "string"
-      ) {
+      if (!item || typeof item.conflict !== "string") return null;
+      const s1 = item.statementOne ?? item.statementA;
+      const s2 = item.statementTwo ?? item.statementB;
+      if (typeof s1 !== "string" || typeof s2 !== "string") {
         return null;
       }
     }
@@ -70,7 +68,9 @@ function parseAndValidateAnalysis(rawText: string): Analysis | null {
     // Validate biasCheck
     if (!Array.isArray(parsed.biasCheck)) return null;
     for (const b of parsed.biasCheck) {
-      if (!b || typeof b.bias !== "string" || typeof b.explanation !== "string") {
+      if (!b || typeof b.bias !== "string") return null;
+      const exp = b.explanation ?? b.evidence;
+      if (typeof exp !== "string") {
         return null;
       }
     }
@@ -96,24 +96,24 @@ function parseAndValidateAnalysis(rawText: string): Analysis | null {
     return {
       reasoningSummary: parsed.reasoningSummary.trim(),
       hiddenAssumptions: parsed.hiddenAssumptions.map((i: any) => ({
-        assumption: i.assumption.trim(),
-        whyRisky: i.whyRisky.trim(),
-        testItBy: i.testItBy.trim(),
+        assumption: (i.assumption || "").trim(),
+        whyRisky: (i.whyRisky || "").trim(),
+        testItBy: (i.testItBy || "").trim(),
       })),
       overlookedFactors: parsed.overlookedFactors.map((i: any) => ({
-        factor: i.factor.trim(),
-        whyItMatters: i.whyItMatters.trim(),
-        category: i.category.trim(),
+        factor: (i.factor || "").trim(),
+        whyItMatters: (i.whyItMatters || "").trim(),
+        category: (i.category || "").trim(),
       })),
       internalConflicts: parsed.internalConflicts.map((i: any) => ({
-        conflict: i.conflict.trim(),
-        statementOne: i.statementOne.trim(),
-        statementTwo: i.statementTwo.trim(),
+        conflict: (i.conflict || "").trim(),
+        statementOne: String(i.statementOne ?? i.statementA ?? "").trim(),
+        statementTwo: String(i.statementTwo ?? i.statementB ?? "").trim(),
       })),
       questionsToAskYourself: parsed.questionsToAskYourself.map((q: string) => q.trim()),
       biasCheck: parsed.biasCheck.map((b: any) => ({
-        bias: b.bias.trim(),
-        explanation: b.explanation.trim(),
+        bias: (b.bias || "").trim(),
+        explanation: String(b.explanation ?? b.evidence ?? "").trim(),
       })),
       reasoningBalance,
     };
